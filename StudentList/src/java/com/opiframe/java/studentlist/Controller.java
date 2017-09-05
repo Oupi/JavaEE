@@ -24,7 +24,6 @@ public class Controller {
   
   private String firstName;
   private String lastName;
-  private int studentId;
   
   /**
    * Creates a new instance of Controller
@@ -61,20 +60,6 @@ public class Controller {
   }
 
   /**
-   * @return the studentId
-   */
-  public int getStudentId() {
-    return studentId;
-  }
-
-  /**
-   * @param studentId the studentId to set
-   */
-  public void setStudentId(int studentId) {
-    this.studentId = studentId;
-  }
-
-  /**
    * @return the studentList
    */
   public List<Student> getStudentList() {
@@ -85,12 +70,10 @@ public class Controller {
     Student stdTemp = new Student();
     stdTemp.setFirstName(firstName);
     stdTemp.setLastName(lastName);
-    stdTemp.setStudentId(studentId);
     
     ejb.addStudent(stdTemp);
     this.firstName = "";
     this.lastName = "";
-    this.studentId = 0;
   }
   
   public void removeStudent(Student student){

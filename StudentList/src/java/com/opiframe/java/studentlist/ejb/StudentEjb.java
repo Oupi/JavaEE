@@ -9,6 +9,8 @@ import com.opiframe.java.studentlist.model.Student;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  *
@@ -17,24 +19,18 @@ import javax.ejb.Stateless;
 @Stateless
 public class StudentEjb {
   
-  private List<Student> studentList = new ArrayList<>();
+  @PersistenceContext EntityManager em;
   
   public List<Student> findAll(){
-    return studentList;
+    return em.createQuery("SELECT e FROM Student e").getResultList();
   }
   
   public void addStudent(Student student){
-    for(Student std:this.studentList){
-      if(std.getStudentId() == student.getStudentId()){
-        return;
-      }      
-    }
-    this.studentList.add(student);
+    em.persist(student);
   }
   
   public void removeStudent(Student student){
-    if(this.studentList.contains(student)){
-      this.studentList.remove(student);
-    }
+    Student temp = em.find(Student.class, student.getStudentId());
+    em.remove(temp);
   }  
 }

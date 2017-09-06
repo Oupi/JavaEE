@@ -7,8 +7,9 @@
     <title>Student List</title>
   </h:head>
   <h:body>
+    <h:link value="Back" outcome="index"></h:link>
     <h:form>
-      <h:dataTable value="#{controller.list()}" var="std">
+      <h:dataTable value="#{controller.findList(1)}" var="std">
         <h:column>
           <f:facet name="header">First Name</f:facet>
             #{std.firstName}
@@ -20,6 +21,14 @@
         <h:column>
           <f:facet name="header">Address</f:facet>
             #{std.address.streetAddress}, #{std.address.city}
+        </h:column>
+        <h:column>
+          <f:facet name="header">Courses</f:facet>
+          <h:dataTable value="#{std.courseList}" var="c">
+            <h:column>
+              #{c.name}
+            </h:column>
+          </h:dataTable>
         </h:column>
         <h:column>
           <f:facet name="header">Remove</f:facet>

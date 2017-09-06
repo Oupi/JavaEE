@@ -76,5 +76,19 @@ public class Student extends Person implements Serializable {
   public void setAddress(Address address) {
     this.address = address;
   }
+
+  /**
+   * @return the courseList
+   */
+  public List<Course> getCourseList() {
+    return courseList;
+  }
+
+  /**
+   * @param courseList the courseList to set
+   */
+  public void setCourseList(List<Course> courseList) {
+    this.courseList = courseList;
+  }
   
 }

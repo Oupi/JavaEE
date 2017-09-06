@@ -5,120 +5,190 @@
  */
 package com.opiframe.java.coursemanager;
 
+import com.opiframe.java.coursemanager.ejb.CourseManager;
 import com.opiframe.java.coursemanager.models.Address;
 import com.opiframe.java.coursemanager.models.Course;
 import com.opiframe.java.coursemanager.models.Room;
 import com.opiframe.java.coursemanager.models.Student;
 import com.opiframe.java.coursemanager.models.Teacher;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.inject.Named;
-import javax.enterprise.context.RequestScoped;
+;
+import javax.enterprise.context.SessionScoped;
 
 /**
  *
  * @author Opiframe
  */
+
+
 @Named(value = "controller")
-@RequestScoped
-public class Controller {
+@SessionScoped
+public class Controller implements Serializable {
+
+  @EJB
+  CourseManager cm;
 
   public static final int STUDENT_CHOICE = 1,
           TEACHER_CHOICE = 2,
           ROOM_CHOICE = 3,
           COURSE_CHOICE = 4;
-  private int choice;
   private String firstName, lastName, courseName, teacherTitle,
-          city, streetAddress, roomName;
+          city, streetAddress, roomName, teacherId = "";
   private int roomNumber;
-  
-  private List<?> list; 
+  private List<String> selectedCourses = new ArrayList<>();
+
+  private List<?> list;
+
   /**
    * Creates a new instance of Controller
    */
   public Controller() {
   }
-  
-  public List<Room> getRooms(){
-    return new ArrayList<Room>();
-  }  
-  
-  public String addRoom(){
+
+  public List<Room> getRooms() {
+    return cm.findRooms("");
+  }
+
+  public String addRoom() {
     Room tempRoom = new Room();
     tempRoom.setNumber(roomNumber);
     tempRoom.setName(roomName);
+
+    cm.addRoom(tempRoom);
+    
+    emptyUi();
     
     return "index";
   }
-  
-  public String addTeacher(){
+
+  public String addStudent() {
+    Student tempStd = new Student();
+    tempStd.setFirstName(firstName);
+    tempStd.setLastName(lastName);
+
+    Address tempAddr = new Address();
+    tempAddr.setStreetAddress(streetAddress);
+    tempAddr.setCity(city);
+
+    tempStd.setAddress(tempAddr);
+    if (this.selectedCourses.size() > 0) {
+      Course tempCourse;
+      List<Course> tempList;
+      List<Course> addList = new ArrayList<>();
+      for (String s : this.selectedCourses) {
+        tempList = cm.findCourses(s);
+        if (tempList.size() > 0) {
+          tempCourse = tempList.get(0);
+          addList.add(tempCourse);
+        }
+      }
+      tempStd.setCourseList(addList);
+    }
+
+    cm.addStudent(tempStd);
+    
+    emptyUi();
+    
+    return "index";
+  }
+
+  public List<Teacher> getTeachers() {
+    return cm.findTeachers(0);
+  }
+
+  public String addTeacher() {
     Teacher tempTchr = new Teacher();
     tempTchr.setTitle(teacherTitle);
     tempTchr.setFirstName(firstName);
     tempTchr.setLastName(lastName);
-    
+
     Address tempAddr = new Address();
     tempAddr.setStreetAddress(streetAddress);
     tempAddr.setCity(city);
-    
+
     tempTchr.setAddress(tempAddr);
+
+    cm.addTeacher(tempTchr);
+    
+    emptyUi();
+
+    return "index";
+  }
+
+  public String addCourse() {
+    Course tempCourse = new Course();
+    int tempId = Integer.parseInt(this.getTeacherId());
+    List<Teacher> tempTeacher = cm.findTeachers(tempId);
+    tempCourse.setName(courseName);
+    if (tempTeacher.size() > 0) {
+      tempCourse.setTeacher(tempTeacher.get(0));
+    }
+    List<Room> tempRooms = cm.findRooms(roomName);
+    if (tempRooms.size() > 0) {
+      tempCourse.setRoom(tempRooms.get(0));
+    }
+    cm.addCourse(tempCourse);
+
+    emptyUi();
     
     return "index";
   }
-  
 
-  public void remove(Object o){
-    if(o instanceof com.opiframe.java.coursemanager.models.Student){
-      
+  public void remove(Object o) {
+    if (o instanceof com.opiframe.java.coursemanager.models.Student) {
+      cm.removeStudent((Student) o);
     }
-    if(o instanceof com.opiframe.java.coursemanager.models.Teacher){
-      
+    if (o instanceof com.opiframe.java.coursemanager.models.Teacher) {
+      cm.removeTeacher((Teacher) o);
     }
-    if(o instanceof com.opiframe.java.coursemanager.models.Room){
-      
+    if (o instanceof com.opiframe.java.coursemanager.models.Room) {
+      cm.removeRoom((Room) o);
     }
-    if(o instanceof com.opiframe.java.coursemanager.models.Course){
-      
+    if (o instanceof com.opiframe.java.coursemanager.models.Course) {
+      cm.removeCourse((Course) o);
     }
   }
-  
+
   /**
    * @return the list
    */
-  public List<?> getList() {
-    switch(choice){
+  public List<?> findList(int choice) {
+    switch (choice) {
       case STUDENT_CHOICE:
-        return (List<Student>)list;
+        return cm.findStudents();
       case TEACHER_CHOICE:
-        return (List<Teacher>)list;
+        return cm.findTeachers(0);
       case ROOM_CHOICE:
-        return (List<Room>)list;
+        return cm.findRooms("");
       case COURSE_CHOICE:
-        return (List<Course>)list;
+        return cm.findCourses("");
       default:
         return null;
     }
   }
 
+  public void emptyUi(){
+    this.teacherTitle = "";
+    this.firstName = "";
+    this.lastName = "";
+    this.streetAddress = "";
+    this.city = "";
+    this.roomName = "";
+    this.roomNumber = 0;
+    this.teacherId = "";
+    this.courseName = "";
+    this.selectedCourses = new ArrayList<>();
+  }
+   
   /**
    * @param list the list to set
    */
   public void setList(List<?> list) {
     this.list = list;
-  }
-
-  /**
-   * @return the choice
-   */
-  public int getChoice() {
-    return choice;
-  }
-
-  /**
-   * @param choice the choice to set
-   */
-  public void setChoice(int choice) {
-    this.choice = choice;
   }
 
   /**
@@ -231,5 +301,37 @@ public class Controller {
    */
   public void setRoomNumber(int roomNumber) {
     this.roomNumber = roomNumber;
+  }
+
+  /**
+   * @return the teacherId
+   */
+  public String getTeacherId() {
+
+    if (!this.teacherId.isEmpty()) {
+      return this.teacherId.split(",")[0];
+    }
+    return "";
+  }
+
+  /**
+   * @param teacherId the teacherId to set
+   */
+  public void setTeacherId(String teacherId) {
+    this.teacherId = teacherId;
+  }
+
+  /**
+   * @return the selectedCourses
+   */
+  public List<String> getSelectedCourses() {
+    return selectedCourses;
+  }
+
+  /**
+   * @param selectedCourses the selectedCourses to set
+   */
+  public void setSelectedCourses(List<String> selectedCourses) {
+    this.selectedCourses = selectedCourses;
   }
 }

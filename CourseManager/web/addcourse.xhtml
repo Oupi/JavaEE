@@ -11,13 +11,16 @@
       Enter course name:
       <h:inputText value="#{controller.courseName}"></h:inputText>
       <br></br>
+      Choose room:
       <h:selectOneMenu value="#{controller.roomName}">
-        <f:selectItems value="#{controller.rooms}"></f:selectItems>
+        <f:selectItems value="#{controller.findList(3)}"></f:selectItems>
       </h:selectOneMenu>
       <br></br>
-      <h:selectOneMenu value="">
-        <f:selectItems value="#{controller.rooms}"></f:selectItems>
+      Choose teacher:
+      <h:selectOneMenu value="#{controller.teacherId}">
+        <f:selectItems value="#{controller.findList(2)}"></f:selectItems>
       </h:selectOneMenu>
+      <h:commandButton value="add" action="#{controller.addCourse()}"></h:commandButton>
       
     </h:form>
   </h:body>

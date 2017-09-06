@@ -8,24 +8,26 @@
   </h:head>
   <h:body>
     <h:form>
-      <h:dataTable value="#{controller.list()}" var="course">
+      <h:link value="Back" outcome="index"></h:link>
+      <h:dataTable value="#{controller.findList(4)}" var="course">
         <h:column>
           <f:facet name="header">Name</f:facet>
             #{course.name}
         </h:column>
         <h:column>
           <f:facet name="header">Teacher</f:facet>
-            #{course.teacher.title}, #{course.teacher.firstName}, #{course.teacher.lastName}
+          #{course.teacher.title}, #{course.teacher.firstName}, #{course.teacher.lastName}
         </h:column>
         <h:column>
           <f:facet name="header">Room</f:facet>
-            #{course.room.number}, #{course.room.name}
+          #{course.room.number}, #{course.room.name}
         </h:column>
         <h:column>
           <f:facet name="header">Remove</f:facet>
           <h:commandButton value="remove" action="#{controller.remove(course)}"></h:commandButton>
         </h:column>
       </h:dataTable>
-    </h:form>  </h:body>
+    </h:form>  
+  </h:body>
 </html>
 

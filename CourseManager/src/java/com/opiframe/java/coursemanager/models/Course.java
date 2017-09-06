@@ -6,6 +6,7 @@
 package com.opiframe.java.coursemanager.models;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,6 +24,7 @@ public class Course implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
+  @Column(unique=true)
   private String name;
   @OneToOne
   private Teacher teacher;
@@ -59,7 +61,7 @@ public class Course implements Serializable {
 
   @Override
   public String toString() {
-    return "com.opiframe.java.coursemanager.models.Course[ id=" + id + " ]";
+    return this.name;
   }
 
   /**

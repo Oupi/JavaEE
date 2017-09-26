@@ -6,6 +6,7 @@
 package com.opiframe.contactlist.contactlist.web;
 
 import com.opiframe.contactlist.contactlist.domain.Contact;
+import com.opiframe.contactlist.contactlist.domain.User;
 import com.opiframe.contactlist.contactlist.service.ContactService;
 import java.util.List;
 import java.util.Random;
@@ -48,5 +49,23 @@ public class ContactController {
   public @ResponseBody String deleteAll(){
     service.deleteAll();
     return "{'Status':'Success'}";
+  }
+  
+  @RequestMapping(value="/login", method=RequestMethod.POST)
+  public ResponseEntity<String> login(@RequestBody User user){
+    if(service.checkUser(user)){
+      return new ResponseEntity<String>("{\"authtoken\":\"123\"}", HttpStatus.OK);
+    } else {
+      return new ResponseEntity(HttpStatus.FORBIDDEN);
+    }
+  }
+  
+  @RequestMapping(value="/register", method=RequestMethod.POST)
+  public ResponseEntity<User> register(@RequestBody User user){
+    if(service.addUser(user)){
+      return new ResponseEntity<User>(user, HttpStatus.OK);
+    } else {
+      return new ResponseEntity(HttpStatus.CONFLICT);
+    }
   }
 }

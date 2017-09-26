@@ -6,7 +6,7 @@ and open the template in the editor.
 -->
 <html ng-app="contactapp">
   <head>
-    <title>TODO supply a title</title>
+    <title>Contact book</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
@@ -14,6 +14,15 @@ and open the template in the editor.
   </head>
   <body ng-controller="ContactController">
     <div>
+      <form>
+        Enter username and password
+        <br/>
+        <input type="text" ng-model="userName"/>
+        <input type="password" ng-model="password"/>
+        <br/>
+        <button ng-click="register()">Register</button>
+        <button ng-click="login()">Login</button>
+      </form>
       <form ng-submit="addContact()">
         Enter first name:
         <input type="text" ng-model="newContact.firstName"/>

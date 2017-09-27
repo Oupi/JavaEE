@@ -5,7 +5,6 @@
  */
 package com.opiframe.contactlist.contactlist.service;
 
-import com.opiframe.contactlist.contactlist.domain.ContactRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -13,7 +12,6 @@ import com.opiframe.contactlist.contactlist.domain.Contact;
 import com.opiframe.contactlist.contactlist.domain.IContactRepository;
 import com.opiframe.contactlist.contactlist.domain.IUserRepository;
 import com.opiframe.contactlist.contactlist.domain.User;
-import com.opiframe.contactlist.contactlist.domain.UserRepository;
 
 /**
  *

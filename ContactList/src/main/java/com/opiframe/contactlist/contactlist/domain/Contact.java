@@ -5,7 +5,6 @@
  */
 package com.opiframe.contactlist.contactlist.domain;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -15,8 +14,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 @Document(collection="contact")
 public class Contact {
-  @Id
-  private Long id;
+  @Indexed(unique=true)
+  private String contactId;
   private String firstName;
   @Indexed
   private String lastName;
@@ -25,17 +24,17 @@ public class Contact {
   private Integer age;
   
   /**
-   * @return the id
+   * @return the contactId
    */
-  public Long getId() {
-    return id;
+  public String getContactId() {
+    return contactId;
   }
 
   /**
-   * @param id the id to set
+   * @param contactId the contactId to set
    */
-  public void setId(Long id) {
-    this.id = id;
+  public void setContactId(String contactId) {
+    this.contactId = contactId;
   }
 
   /**

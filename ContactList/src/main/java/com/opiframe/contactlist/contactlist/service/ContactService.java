@@ -81,4 +81,7 @@ public class ContactService {
     return tmpUser;
   }
   
+  public Contact updateContact(Contact contact){
+    return repo.updateContact(contact);
+  }
 }

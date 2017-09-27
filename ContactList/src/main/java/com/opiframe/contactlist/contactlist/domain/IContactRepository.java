@@ -13,10 +13,14 @@ import org.springframework.data.mongodb.repository.Query;
  *
  * @author Opiframe
  */
-public interface IContactRepository extends MongoRepository<Contact,Long>{
+public interface IContactRepository extends MongoRepository<Contact, Long>, ICustomContactRepository {
+
   public List<Contact> findByLastName(String lastName);
+
   public List<Contact> findByFirstName(String firstName);
+
   public List<Contact> findByEmail(String email);
+
   @Query("{age:{$gt:?0,$lt:?1}}")
   public List<Contact> findByAge(Integer greaterThan, Integer lessThan);
 }

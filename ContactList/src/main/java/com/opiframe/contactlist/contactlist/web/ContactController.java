@@ -53,13 +53,22 @@ public class ContactController {
   }
 
   @RequestMapping(value = "api/contact", method = RequestMethod.POST)
-  public ResponseEntity<Contact> addContact(@RequestBody Contact contact) {
-    Random random = new Random();
-    Long id = random.nextLong();
-    contact.setId(id);
-    if (service.addContact(contact)) {
-      return new ResponseEntity<Contact>(contact, HttpStatus.OK);
-    }
+  public ResponseEntity<Contact> addContact(@RequestParam("mode") String mode, @RequestBody Contact contact) {
+    System.out.println("Contact id: " + contact.getContactId());
+    
+    if (mode.equals("add")) {
+      System.out.println("addContact add");
+      Random random = new Random();
+      Long id = random.nextLong();
+      contact.setContactId(id.toString());
+      if (service.addContact(contact)) {
+        return new ResponseEntity<Contact>(contact, HttpStatus.OK);
+      }
+    } else if (mode.equals("edit")) {
+      System.out.println("Addcontact edit");
+      Contact tmpContact = service.updateContact(contact);
+      return new ResponseEntity<Contact>(tmpContact, HttpStatus.OK);
+    }  
     return new ResponseEntity(HttpStatus.CONFLICT);
   }
 
@@ -74,11 +83,11 @@ public class ContactController {
   public ResponseEntity<String> login(@RequestBody User user) {
     User tmpUser = service.findUser(user);
     if (tmpUser != null) {
-      if(tmpUser.getPassword().contentEquals(user.getPassword())){
+      if (tmpUser.getPassword().contentEquals(user.getPassword())) {
         return new ResponseEntity<String>("{\"authtoken\":\"123\"}", HttpStatus.OK);
       }
     }
-      return new ResponseEntity(HttpStatus.FORBIDDEN);
+    return new ResponseEntity(HttpStatus.FORBIDDEN);
   }
 
   @RequestMapping(value = "/register", method = RequestMethod.POST)

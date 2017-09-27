@@ -7,20 +7,28 @@
 let app = angular.module("contactapp", []);
 
 app.controller("ContactController", function ($scope, $http) {
+  $scope.newContact = {};
+  $scope.newContact.firstName = "";
+  $scope.newContact.lastName = "";
+  $scope.newContact.email = "";
+  $scope.newContact.phoneNumber = "";
+  $scope.newContact.age = 0;
+  $scope.newContact.contactId = 0;
   $scope.token = "";
-  $scope.choices = ["firstName", "lastName", "email"]
+  $scope.choices = ["firstName", "lastName", "email"];
+
   $scope.addContact = function () {
     console.log("Age:" + $scope.newContact.age);
     $http({
       method: "POST",
-      url: "http://localhost:8080/api/contact",
+      url: "http://localhost:8080/api/contact?mode=add",
       data: {
         "firstName": $scope.newContact.firstName,
         "lastName": $scope.newContact.lastName,
         "phoneNumber": $scope.newContact.phoneNumber,
         "email": $scope.newContact.email,
         "age": $scope.newContact.age,
-        "id": 0
+        "contactId": 0
       },
       headers: {
         "Content-Type": "application/json",
@@ -28,6 +36,42 @@ app.controller("ContactController", function ($scope, $http) {
       }
     }).then(function (response) {
       console.log(response.data);
+      $scope.newContact.firstName = "";
+      $scope.newContact.lastName = "";
+      $scope.newContact.email = "";
+      $scope.newContact.phoneNumber = "";
+      $scope.newContact.age = 0;
+      $scope.newContact.contactId = 0;
+    }, function (err) {
+      console.log(err);
+    });
+  };
+  
+  $scope.editContact = function () {
+    console.log("Age:" + $scope.newContact.age);
+    $http({
+      method: "POST",
+      url: "http://localhost:8080/api/contact?mode=edit",
+      data: {
+        "firstName": $scope.newContact.firstName,
+        "lastName": $scope.newContact.lastName,
+        "phoneNumber": $scope.newContact.phoneNumber,
+        "email": $scope.newContact.email,
+        "age": $scope.newContact.age,
+        "contactId": $scope.newContact.contactId
+      },
+      headers: {
+        "Content-Type": "application/json",
+        "authtoken": $scope.token
+      }
+    }).then(function (response) {
+      console.log(response.data);
+      $scope.newContact.firstName = "";
+      $scope.newContact.lastName = "";
+      $scope.newContact.email = "";
+      $scope.newContact.phoneNumber = "";
+      $scope.newContact.age = 0;
+      $scope.newContact.contactId = 0;
     }, function (err) {
       console.log(err);
     });
@@ -42,6 +86,7 @@ app.controller("ContactController", function ($scope, $http) {
         "authtoken": $scope.token
       }
     }).then(function (data) {
+      $scope.contacts = [];
       console.log(data);
     }, function (err) {
       console.log(err);
@@ -122,4 +167,8 @@ app.controller("ContactController", function ($scope, $http) {
       console.log(err);
     });
   };
+
+  $scope.edit = function (contact) {
+    $scope.newContact = contact;
+  }
 });

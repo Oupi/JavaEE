@@ -8,7 +8,9 @@ let app = angular.module("contactapp", []);
 
 app.controller("ContactController", function ($scope, $http) {
   $scope.token = "";
+  $scope.choices = ["firstName", "lastName", "email"]
   $scope.addContact = function () {
+    console.log("Age:" + $scope.newContact.age);
     $http({
       method: "POST",
       url: "http://localhost:8080/api/contact",
@@ -17,6 +19,7 @@ app.controller("ContactController", function ($scope, $http) {
         "lastName": $scope.newContact.lastName,
         "phoneNumber": $scope.newContact.phoneNumber,
         "email": $scope.newContact.email,
+        "age": $scope.newContact.age,
         "id": 0
       },
       headers: {
@@ -45,8 +48,32 @@ app.controller("ContactController", function ($scope, $http) {
     });
   };
 
-  $scope.findByLastName = function () {
-    let url = "http://localhost:8080/api/contact/" + $scope.lastName;
+  $scope.find = function () {
+    let url = "http://localhost:8080/api/contact?search=" +
+            $scope.searchTerm +
+            "&value=" +
+            $scope.value;
+
+    $http({
+      method: "GET",
+      url: url,
+      headers: {
+        "Content-Type": "application/json",
+        "authtoken": $scope.token
+      }
+    }).then(function (response) {
+      console.log(response);
+      $scope.contacts = response.data;
+    }, function (err) {
+      console.log(err);
+    });
+  };
+
+  $scope.findByAge = function () {
+    let url = "http://localhost:8080/api/contact/age?gt=" +
+            $scope.lowerLimit +
+            "&lt=" +
+            $scope.upperLimit;
 
     $http({
       method: "GET",

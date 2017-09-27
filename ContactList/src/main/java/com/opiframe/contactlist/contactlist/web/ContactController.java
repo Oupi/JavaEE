@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,43 +27,67 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class ContactController {
+
   @Autowired
   private ContactService service;
-  
-  @RequestMapping(value="api/contact/{lastName}",method=RequestMethod.GET)
-  public @ResponseBody List<Contact> findByLastName(@PathVariable("lastName") String lastName){
-    return service.findByLastName(lastName);
+
+  @RequestMapping(value = "api/contact", method = RequestMethod.GET)
+  public @ResponseBody
+  List<Contact> find(@RequestParam("search") String search, @RequestParam("value") String value) {
+    if (search.contentEquals("lastName")) {
+      return service.findByLastName(value);
+    }
+    if (search.contentEquals("firstName")) {
+      return service.findByFirstName(value);
+    }
+    if (search.contentEquals("email")) {
+      return service.findByEmail(value);
+    }
+    return null;
   }
-  
-  @RequestMapping(value="api/contact", method=RequestMethod.POST)
-  public ResponseEntity<Contact> addContact(@RequestBody Contact contact){
+
+  @RequestMapping(value = "api/contact/age", method = RequestMethod.GET)
+  public @ResponseBody
+  List<Contact> findByAge(@RequestParam("gt") Integer lowerLimit, @RequestParam("lt") Integer upperLimit) {
+    return service.findByAge(lowerLimit, upperLimit);
+  }
+
+  @RequestMapping(value = "api/contact", method = RequestMethod.POST)
+  public ResponseEntity<Contact> addContact(@RequestBody Contact contact) {
     Random random = new Random();
     Long id = random.nextLong();
     contact.setId(id);
-    if(service.addContact(contact)){
-      return new ResponseEntity<Contact>(contact,HttpStatus.OK);
+    if (service.addContact(contact)) {
+      return new ResponseEntity<Contact>(contact, HttpStatus.OK);
     }
     return new ResponseEntity(HttpStatus.CONFLICT);
   }
-  
-  @RequestMapping(value="api/contact", method=RequestMethod.DELETE)
-  public @ResponseBody String deleteAll(){
+
+  @RequestMapping(value = "api/contact", method = RequestMethod.DELETE)
+  public @ResponseBody
+  String deleteAll() {
     service.deleteAll();
     return "{'Status':'Success'}";
   }
-  
-  @RequestMapping(value="/login", method=RequestMethod.POST)
-  public ResponseEntity<String> login(@RequestBody User user){
-    if(service.checkUser(user)){
-      return new ResponseEntity<String>("{\"authtoken\":\"123\"}", HttpStatus.OK);
-    } else {
-      return new ResponseEntity(HttpStatus.FORBIDDEN);
+
+  @RequestMapping(value = "/login", method = RequestMethod.POST)
+  public ResponseEntity<String> login(@RequestBody User user) {
+    User tmpUser = service.findUser(user);
+    if (tmpUser != null) {
+      if(tmpUser.getPassword().contentEquals(user.getPassword())){
+        return new ResponseEntity<String>("{\"authtoken\":\"123\"}", HttpStatus.OK);
+      }
     }
+      return new ResponseEntity(HttpStatus.FORBIDDEN);
   }
-  
-  @RequestMapping(value="/register", method=RequestMethod.POST)
-  public ResponseEntity<User> register(@RequestBody User user){
-    if(service.addUser(user)){
+
+  @RequestMapping(value = "/register", method = RequestMethod.POST)
+  public ResponseEntity<User> register(@RequestBody User user) {
+    System.out.println("Controller register");
+    Random random = new Random();
+    Long id = random.nextLong();
+    user.setId(id);
+    if (service.addUser(user)) {
       return new ResponseEntity<User>(user, HttpStatus.OK);
     } else {
       return new ResponseEntity(HttpStatus.CONFLICT);

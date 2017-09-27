@@ -5,13 +5,35 @@
  */
 package com.opiframe.contactlist.contactlist.domain;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 /**
  *
  * @author Opiframe
  */
+@Document(collection="user")
 public class User {
+  @Id
+  private Long id;
+  @Indexed(unique=true)
   private String userName;
   private String password;
+
+  /**
+   * @return the id
+   */
+  public Long getId() {
+    return id;
+  }
+
+  /**
+   * @param id the id to set
+   */
+  public void setId(Long id) {
+    this.id = id;
+  }
 
   /**
    * @return the userName

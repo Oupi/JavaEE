@@ -36,16 +36,24 @@ and open the template in the editor.
         Enter email:
         <input type="email" ng-model="newContact.email"/>
         <br></br>
+        What was your age again?
+        <input type="number" ng-model="newContact.age"/>
+        <br></br>
         <input type="submit" value="add"/>
       </form>
       <hr/>
       <button ng-click="deleteAll()">delete list</button>
       <br/>
-      <form ng-submit="findByLastName()">
-        Enter last name as search term:
-        <input type="text" ng-model="lastName"/>
+      <form ng-submit="find()">
+        Select search term:
+        <select ng-model="searchTerm" ng-options="choice for choice in choices"></select>
+        <input type="text" ng-model="value"/>
+        <input type="submit" value="search"/>
         <br/>
-        <input type="submit" value="search"/>        
+        Enter Age range:
+        <input type="number" ng-model="lowerLimit"/>
+        <input type="number" ng-model="upperLimit"/>
+        <button ng-click="findByAge()">Search by age</button>       
       </form>
       <div ng-repeat="contact in contacts">
         First name:
@@ -59,6 +67,9 @@ and open the template in the editor.
         <br/>
         Email:
         {{contact.email}}
+        <br/>
+        Age:
+        {{contact.age}}
         <br/>
       </div>
     </div>

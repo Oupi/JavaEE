@@ -5,17 +5,25 @@
  */
 package com.opiframe.contactlist.contactlist.domain;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 /**
  *
  * @author Opiframe
  */
+@Document(collection="contact")
 public class Contact {
+  @Id
   private Long id;
   private String firstName;
+  @Indexed
   private String lastName;
   private String phoneNumber;
   private String email;
-
+  private Integer age;
+  
   /**
    * @return the id
    */
@@ -84,5 +92,19 @@ public class Contact {
    */
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  /**
+   * @return the age
+   */
+  public Integer getAge() {
+    return age;
+  }
+
+  /**
+   * @param age the age to set
+   */
+  public void setAge(Integer age) {
+    this.age = age;
   }
 }

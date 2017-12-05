@@ -51,7 +51,7 @@ public class CarService {
     public boolean addCar(Car car) {
         try {
             Mono<Car> temp = Mono.just(car);
-            carRepo.insert(temp).then();
+            carRepo.insert(temp).then().subscribe();
             return true;
         } catch (Exception e) {
             e.printStackTrace();

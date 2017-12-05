@@ -72,11 +72,21 @@ public class HillBillyService {
         }
         return false;
     }
-    
-    public boolean isUserLogged(String token){
-        if(loggedUsers.containsKey(token)){
+
+    public boolean isUserLogged(String token) {
+        if (loggedUsers.containsKey(token)) {
             return true;
         }
-        return false;   
+        return false;
+    }
+
+    public boolean register(HillBilly user) {
+        try {
+            userRepo.save(user);
+            return true;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }        
     }
 }

@@ -7,6 +7,7 @@ package com.opiframe.java.ReactiveCarShop.service;
 
 import com.opiframe.java.ReactiveCarShop.domain.Car;
 import com.opiframe.java.ReactiveCarShop.domain.ICarShop;
+import java.time.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -48,8 +49,14 @@ public class CarService {
     }
 
     public boolean addCar(Car car) {
-        carRepo.save(car);
-        return true;
+        try {
+            Mono<Car> temp = Mono.just(car);
+            carRepo.insert(temp).then();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean removeCar(String id) {
@@ -59,5 +66,13 @@ public class CarService {
             return true;
         }
         return false;
+    }
+
+    public Flux<Car> streamCars() {
+        Flux<Long> interval = Flux.interval(Duration.ofSeconds(2));
+        interval.subscribe();
+
+        Flux<Car> temp = this.getAllCars();
+        return Flux.zip(interval, temp).map(tuple -> tuple.getT2());
     }
 }

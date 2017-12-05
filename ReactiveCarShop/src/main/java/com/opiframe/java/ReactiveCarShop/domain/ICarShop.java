@@ -7,12 +7,15 @@ package com.opiframe.java.ReactiveCarShop.domain;
 
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 
 /**
  *
  * @author Oula
  */
+@Repository
 public interface ICarShop extends ReactiveMongoRepository<Car, String> {
 
     Flux<Car> findByTypeIgnoreCase(String type);

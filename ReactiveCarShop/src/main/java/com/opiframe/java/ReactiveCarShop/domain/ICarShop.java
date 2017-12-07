@@ -16,10 +16,11 @@ import reactor.core.publisher.Flux;
  * @author Oula
  */
 @Repository
-public interface ICarShop extends ReactiveMongoRepository<Car, String> {
+public interface ICarShop extends ReactiveMongoRepository<Car, String>, ICustomCarShop {
 
     Flux<Car> findByTypeIgnoreCase(String type);
     Flux<Car> findByYear(int year);
     @Query("{price:{$gte:?0,$lte:?1}}")
     Flux<Car> findByPrice(int greaterThan, int lessThan);
+    
 }

@@ -60,12 +60,15 @@ public class CarService {
     }
 
     public boolean removeCar(String id) {
-        carRepo.findById(id).hasElement().subscribe(data -> this.isFound = data);
-        if (this.isFound) {
-            carRepo.deleteById(id);
-            return true;
-        }
-        return false;
+        carRepo.findById(id).hasElement().subscribe(data -> {
+            if (data) {
+                carRepo.deleteById(id).then().subscribe();
+                this.isFound = true;
+            } else {
+                this.isFound = false;
+            }
+        });
+        return true;
     }
 
     public Flux<Car> streamCars() {
@@ -74,5 +77,13 @@ public class CarService {
 
         Flux<Car> temp = this.getAllCars();
         return Flux.zip(interval, temp).map(tuple -> tuple.getT2());
+    }
+
+    public boolean editCar(Car car) {
+        if (car != null && car.getId().length() > 0) {
+            carRepo.updateCar(car);
+            return true;
+        }
+        return false;
     }
 }

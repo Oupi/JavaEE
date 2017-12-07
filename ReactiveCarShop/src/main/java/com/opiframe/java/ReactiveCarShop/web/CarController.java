@@ -42,7 +42,7 @@ public class CarController {
         return new ResponseEntity<>("{\"message\": \"Success\"}", HttpStatus.OK);
     }
     
-    @GetMapping(value="/api/car/stream", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
+    @GetMapping(value="/api/car/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<Car> getCarStream(){
         return carService.streamCars();
     }
